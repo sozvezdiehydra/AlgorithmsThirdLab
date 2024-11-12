@@ -1,4 +1,5 @@
 ﻿namespace AlgorithmsThirdLab.Operations;
+using DataStructures;
 
 public class PushCommand : ICommand
 {
