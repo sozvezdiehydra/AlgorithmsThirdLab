@@ -4,16 +4,17 @@ using System.Text.RegularExpressions;
 
 namespace AlgorithmsThirdLab.Algorithms;
 
-public class InfixToPostfixConverter
+internal class InfixToPostfixConverter
 {
     public string result;
 
-    public void RpnCalculator(string expression)
+    public List<Token> Converter(string expression)
     {
         expression = expression.Replace(" ", string.Empty);
         var tokens = GetToken(expression);
         var rpn = RPN(tokens);
-        result = string.Join("", Result(rpn));
+        result = RPNToString(rpn);
+        return rpn;
     }
 
     private static List<Token> GetToken(string str)
@@ -107,61 +108,115 @@ public class InfixToPostfixConverter
     {
         List<Token> prn = new List<Token>();
         Stack<Token> stack = new Stack<Token>();
+
         foreach (Token token in tokens)
         {
-            if (stack.Count == 0 && !(token is Number))
+            if (token is Number)
             {
-                stack.Push(token);
-                continue;
+                prn.Add(token);
             }
-            if (token is Operation)
+            else if (token is Operation)
             {
-                if (stack.Peek() is Brackets)
-                {
-                    stack.Push(token);
-                    continue;
-                }
-
                 Operation oper = (Operation)token;
-                Operation oper2 = (Operation)stack.Peek();
-                if (oper.Priority > oper2.Priority)
+
+                while (stack.Count > 0 && stack.Peek() is Operation topOper &&
+                       topOper.Priority >= oper.Priority)
                 {
-                    stack.Push(token);
+                    prn.Add(stack.Pop());
                 }
-                else if (oper.Priority <= oper2.Priority)
-                {
-                    while (stack.Count > 0 && !(token is Brackets))
-                    {
-                        prn.Add(stack.Pop());
-                    }
-                    stack.Push(token);
-                }
+                stack.Push(token);
             }
-            else if (token is Brackets)
+            else if (token is Brackets brackets)
             {
-                if (((Brackets)token).IsClosing)
+                if (brackets.IsClosing)
                 {
-                    while (!(stack.Peek() is Brackets))
+                    while (stack.Count > 0 && !(stack.Peek() is Brackets))
                     {
                         prn.Add(stack.Pop());
                     }
+
                     stack.Pop();
+
+                    if (stack.Count > 0 && stack.Peek() is Operation topOper)
+                    {
+                        prn.Add(stack.Pop());
+                    }
                 }
                 else
                 {
                     stack.Push(token);
                 }
             }
-            else if (token is Number)
-            {
-                prn.Add(token);
-            }
         }
+
         while (stack.Count > 0)
         {
             prn.Add(stack.Pop());
         }
+
         return prn;
+    }
+
+    private static string RPNToString(List<Token> tokens)
+    {
+        List<string> postfixExpression = new List<string>();
+
+        foreach (Token token in tokens)
+        {
+            if (token is Number number)
+            {
+                postfixExpression.Add(number.Symbol.ToString());
+            }
+            else if (token is Operation operation)
+            {
+                string oper = "нипон";
+                switch (operation)
+                {
+                    case Addition:
+                        oper = "+";
+                        break;
+                    case Subtraction:
+                        oper = "-";
+                        break;
+                    case Multiplication:
+                        oper = "*";
+                        break;
+                    case Division:
+                        oper = "/";
+                        break;
+                    case Log:
+                        oper = "log";
+                        break;
+                    case Power:
+                        oper = "^";
+                        break;
+                    case Sqrt:
+                        oper = "sqrt";
+                        break;
+                    case Sin:
+                        oper = "sin";
+                        break;
+                    case Cos:
+                        oper = "cos";
+                        break;
+                    case Tg:
+                        oper = "tg";
+                        break;
+                    case Ctg:
+                        oper = "ctg";
+                        break;
+                    default:
+                        break;
+                }
+                postfixExpression.Add(oper);
+            }
+            else
+            {
+                throw new InvalidOperationException("Неизвестный тип токена.");
+            }
+        }
+
+        return string.Join(" ", postfixExpression.ToArray());
     }
 
     private static Stack<double> Result(List<Token> expression)
