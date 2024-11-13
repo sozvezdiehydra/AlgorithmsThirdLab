@@ -1,14 +1,21 @@
 ﻿using System;
+using System.Xml;
 using AlgorithmsThirdLab.Algorithms;
 using AlgorithmsThirdLab.src.Algorithms;
+using AlgorithmsThirdLab.Utilities;
 
 namespace AlgorithmsThirdLab
 {
     class Program
     {
-        // Временный main ля тестов PostfixEvaluator и InfixToPostfixConverter
+        // Временный Main ля тестов TimeMeasurement, PostfixEvaluator и InfixToPostfixConverter
         static void Main(string[] args)
         {
+            // Для запуска необоходимо создать файл "input.txt" в папке
+            // AlgorithmsThirdLab\AlgorithmsThirdLab\bin\Debug\net8.0\
+            TimeMeasurement timeMeasurement = new TimeMeasurement();
+            timeMeasurement.Run();
+            Console.WriteLine("-----------");
             TestInfixToPostfixConverter();
         }
 

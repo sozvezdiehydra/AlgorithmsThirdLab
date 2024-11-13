@@ -1,6 +1,7 @@
 ﻿using AlgorithmsThirdLab.src.Algorithms;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using AlgorithmsThirdLab.DataStructures;
 
 namespace AlgorithmsThirdLab.Algorithms;
 
@@ -107,7 +108,7 @@ internal class InfixToPostfixConverter
     private static List<Token> RPN(List<Token> tokens)
     {
         List<Token> prn = new List<Token>();
-        Stack<Token> stack = new Stack<Token>();
+        DataStructures.Stack<Token> stack = new DataStructures.Stack<Token>();
 
         foreach (Token token in tokens)
         {
@@ -119,7 +120,7 @@ internal class InfixToPostfixConverter
             {
                 Operation oper = (Operation)token;
 
-                while (stack.Count > 0 && stack.Peek() is Operation topOper &&
+                while (!stack.IsEmpty() && stack.Top() is Operation topOper &&
                        topOper.Priority >= oper.Priority)
                 {
                     prn.Add(stack.Pop());
@@ -130,14 +131,14 @@ internal class InfixToPostfixConverter
             {
                 if (brackets.IsClosing)
                 {
-                    while (stack.Count > 0 && !(stack.Peek() is Brackets))
+                    while (!stack.IsEmpty() && !(stack.Top() is Brackets))
                     {
                         prn.Add(stack.Pop());
                     }
 
                     stack.Pop();
 
-                    if (stack.Count > 0 && stack.Peek() is Operation topOper)
+                    if (!stack.IsEmpty() && stack.Top() is Operation topOper)
                     {
                         prn.Add(stack.Pop());
                     }
@@ -149,7 +150,7 @@ internal class InfixToPostfixConverter
             }
         }
 
-        while (stack.Count > 0)
+        while (!stack.IsEmpty())
         {
             prn.Add(stack.Pop());
         }
@@ -219,9 +220,9 @@ internal class InfixToPostfixConverter
         return string.Join(" ", postfixExpression.ToArray());
     }
 
-    private static Stack<double> Result(List<Token> expression)
+    private static DataStructures.Stack<double> Result(List<Token> expression)
     {
-        Stack<double> stack = new Stack<double>();
+        DataStructures.Stack<double> stack = new DataStructures.Stack<double>();
         foreach (Token token in expression)
         {
             if (token is Number number)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AlgorithmsThirdLab.DataStructures;
 
 namespace AlgorithmsThirdLab.src.Algorithms;
 
@@ -13,17 +14,19 @@ internal class PostfixEvaluator
     }
     private static double EvaluatePostfix(List<Token> tokens)
     {
-        Stack<double> stack = new Stack<double>();
+        DataStructures.Stack<double> stack = new DataStructures.Stack<double>();
+        int counter = 0;
 
         foreach (Token token in tokens)
         {
             if (token is Number number) // Если токен - число
             {
                 stack.Push(number.Symbol);
+                counter++;
             }
             else if (token is Operation operation) // Если токен - операция
             {
-                if (stack.Count < operation.RequiredOperands)
+                if (counter < operation.RequiredOperands)
                     throw new InvalidOperationException("Недостаточно операндов для выполнения операции.");
 
                 // Извлекаем необходимое количество операндов
@@ -31,11 +34,13 @@ internal class PostfixEvaluator
                 for (int i = operation.RequiredOperands - 1; i >= 0; i--)
                 {
                     operands[i] = stack.Pop();
+                    counter--;
                 }
 
                 // Выполняем операцию и кладем результат в стек
                 double result = operation.Perform(operands);
                 stack.Push(result);
+                counter++;
             }
             else
             {
@@ -44,7 +49,7 @@ internal class PostfixEvaluator
         }
 
         // Если после всех операций в стеке остался один элемент - это результат
-        if (stack.Count != 1)
+        if (counter != 1)
             throw new InvalidOperationException("Некорректное постфиксное выражение.");
 
         return stack.Pop();
