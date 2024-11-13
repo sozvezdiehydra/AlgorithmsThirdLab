@@ -1,8 +1,7 @@
-﻿using System;
-using System.Xml;
-using AlgorithmsThirdLab.Algorithms;
+﻿using AlgorithmsThirdLab.Algorithms;
 using AlgorithmsThirdLab.src.Algorithms;
 using AlgorithmsThirdLab.Utilities;
+using AlgorithmsThirdLab.DataStructures;
 
 namespace AlgorithmsThirdLab
 {
@@ -17,6 +16,11 @@ namespace AlgorithmsThirdLab
             timeMeasurement.Run();
             Console.WriteLine("-----------");
             TestInfixToPostfixConverter();
+
+            QueueProcessor<string> queueProcessor = new QueueProcessor<string>();
+            queueProcessor.Run();
+            Console.WriteLine("-----------");
+
         }
 
         static void TestInfixToPostfixConverter()
