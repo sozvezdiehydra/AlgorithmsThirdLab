@@ -44,7 +44,7 @@ public class QueueList<T>
         return value;
     }
 
-    private bool IsEmpty()
+    public bool IsEmpty()
     {
         return head == null;
     }

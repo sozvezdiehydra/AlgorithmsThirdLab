@@ -2,24 +2,50 @@
 using AlgorithmsThirdLab.src.Algorithms;
 using AlgorithmsThirdLab.Utilities;
 using AlgorithmsThirdLab.DataStructures;
+using AlgorithmsThirdLab.src.Utilities;
 
 namespace AlgorithmsThirdLab
 {
     class Program
     {
-        // Временный Main ля тестов TimeMeasurement, PostfixEvaluator и InfixToPostfixConverter
+        // Временный Main dля тестов TimeMeasurement, PostfixEvaluator и InfixToPostfixConverter
         static void Main(string[] args)
         {
             // Для запуска необоходимо создать файл "input.txt" в папке
             // AlgorithmsThirdLab\AlgorithmsThirdLab\bin\Debug\net8.0\
             TimeMeasurement timeMeasurement = new TimeMeasurement();
             timeMeasurement.Run();
-            Console.WriteLine("-----------");
+            Console.WriteLine("------------------------------------------------------------------");
+
             TestInfixToPostfixConverter();
+            Console.WriteLine("------------------------------------------------------------------");
 
             QueueProcessor<string> queueProcessor = new QueueProcessor<string>();
             queueProcessor.Run();
-            Console.WriteLine("-----------");
+            Console.WriteLine("------------------------------------------------------------------");
+
+            QueueListProcessor<string> queueListProcessor = new QueueListProcessor<string>();
+            queueListProcessor.Run();
+            Console.WriteLine("------------------------------------------------------------------");
+
+            Node root = new Node('A',
+            new Node('B',
+                new Node('C'),
+                new Node('D')
+            ),
+            new Node('I',
+                null,
+                new Node('F',
+                    new Node('G'),
+                    null
+                )
+            )
+        );
+
+            TreeTraverser tree = new TreeTraverser(root);
+            string traversal = tree.Traverse(tree.Root);
+            Console.WriteLine("Binary Tree");
+            Console.WriteLine(traversal);
 
         }
 
